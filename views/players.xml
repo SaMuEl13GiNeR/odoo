@@ -50,13 +50,68 @@
                                 </page>
                                 <page string="Barcos">
                                     <group>
-                                        <field name="barco" mode="tree">
+                                        <!-- <field name="barco" mode="tree">
                                             <tree editable="bottom">
                                                 <field name="name"></field>
                                                 <field name="barco_type"></field>
                                                 <field name="canyones"></field>
                                             </tree>
+                                        </field> -->
+                                        <field name="barco" mode="kanban">
+
+                                            <kanban>
+                                                <field name="id" />
+                                                <field name="name"></field>
+                                                <field name="avatar"></field>
+                                                <field name="barco_type"></field>
+                                                <field name="canyones"></field>
+                                                <templates>
+                                                    <t t-name="kanban-box">
+                                                        <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                            <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                                                t-attf-style="background-image:url('#{kanban_image('pirates.barco', 'avatar', record.id.value, placeholder)}')"></div>
+                                                            <div class="oe_kanban_details d-flex flex-column">
+                                                                <a type="open">
+                                                                    <h4
+                                                                        class="o_kanban_record_title oe_partner_heading">
+                                                                        <field name="name" />
+                                                                    </h4>
+                                                                </a>
+                                                                <ul>
+                                                                    <li>
+                                                                        Tipo:
+                                                                        <field name="barco_type" />
+                                                                    </li>
+                                                                    <li>
+                                                                        Cañones:
+                                                                        <field name="canyones" />
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <!-- <div class="oe_kanban_details d-flex flex-column">
+                                                                <h4 class="o_kanban_record_title oe_partner_heading">Vehicles:</h4>
+                                                                <div class="vehicles_images">
+                                                                    <span t-foreach="record.vehicles.raw_value" t-as="i">
+
+                                                                        <img t-attf-class="mini_vehicle"
+                                                                            t-att-src="kanban_image('negocity.vehicle', 'img_computed',i)"
+                                                                            t-att-alt="i" />
+                                                                    </span>
+                                                                </div>
+
+                                                                <button name="assign_random_car" type="object"
+                                                                    string="Random Car" class="btn btn-primary">Random
+                                                                    Car</button>
+                                                            </div> -->
+
+                                                        </div>
+                                                    </t>
+                                                </templates>
+                                            </kanban>
+
                                         </field>
+
+
                                     </group>
                                 </page>
                             </notebook>
@@ -83,6 +138,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+
                                 <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
                                     t-attf-style="background-image:url('#{kanban_image('pirates.player', 'avatar', record.id.value, placeholder)}')"></div>
 
