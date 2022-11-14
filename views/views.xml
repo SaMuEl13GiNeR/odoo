@@ -1,0 +1,94 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+
+    <!-- PLAYER  players.xml-->
+
+    <!-- PIRATES  pirates.xml-->
+
+    <!-- BARCO barco.xml-->
+
+    <!-- PIRATES TYPE pirates_type.xml-->
+
+    <!-- BARCO TYPE barco_type.xml-->
+
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="pirates.action_pirates">
+      <field name="name">pirates window</field>
+      <field name="res_model">pirates.pirates</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pirates.action_player">
+      <field name="name">player window</field>
+      <field name="res_model">pirates.player</field>
+      <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pirates.action_barco">
+      <field name="name">barco window</field>
+      <field name="res_model">pirates.barco</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pirates.action_pirates_type">
+      <field name="name">pirates type window</field>
+      <field name="res_model">pirates.pirates_type</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pirates.action_barco_type">
+      <field name="name">barco type window</field>
+      <field name="res_model">pirates.barco_type</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="pirates.action_battles">
+      <field name="name">battles window</field>
+      <field name="res_model">pirates.battle</field>
+      <field name="view_mode">tree,form,calendar</field>
+    </record>
+
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="pirates.action_server">
+      <field name="name">pirates server</field>
+      <field name="model_id" ref="model_pirates_pirates"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="PIRATES" id="pirates.menu_root" />
+
+    <!-- menu categories -->
+
+    <menuitem name="GAME" id="pirates.menu_1" parent="pirates.menu_root" />
+    <menuitem name="ADMIN" id="pirates.menu_2" parent="pirates.menu_root" />
+    <menuitem name="BATTLES" id="pirates.menu_3" parent="pirates.menu_root" />
+
+    <!-- actions -->
+
+    <menuitem name="Player/Tripulacion" id="pirates.menu_1_player" parent="pirates.menu_1" action="pirates.action_player" />
+    <menuitem name="Pirates" id="pirates.menu_1_pirates" parent="pirates.menu_1" action="pirates.action_pirates" />
+    <menuitem name="Barco" id="pirates.menu_1_barco" parent="pirates.menu_1" action="pirates.action_barco" />
+
+    <menuitem name="Pirates Type" id="pirates.menu_2_pirates_type" parent="pirates.menu_2" action="pirates.action_pirates_type" />
+    <menuitem name="Barco Type" id="pirates.menu_2_barco_type" parent="pirates.menu_2" action="pirates.action_barco_type" />
+
+    <menuitem name="Battles" id="pirates.menu_3_battles" parent="pirates.menu_3" action="pirates.action_battles" />
+
+  </data>
+</odoo>

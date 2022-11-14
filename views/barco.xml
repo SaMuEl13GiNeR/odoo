@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <!-- BARCO -->
+
+        <record model="ir.ui.view" id="pirates.barco_tree">
+            <field name="name">barco list</field>
+            <field name="model">pirates.barco</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"></field>
+                    <field name="avatar_min" widget="image"></field>
+                    <field name="barco_type"></field>
+                    <field name="tripulacion"></field>
+                    <field name="canyones"></field>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="pirates.barco_form">
+            <field name="name">barco form</field>
+            <field name="model">pirates.barco</field>
+            <field name="arch" type="xml">
+                <form string="Barco Form">
+                    <sheet>
+                        <group>
+                            <field name="name"></field>
+                            <field name="barco_type"></field>
+                            <field name="tripulacion"></field>
+                            <field name="canyones"></field>
+                            <field name="avatar" widget="image" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pirates.barco_search">
+            <field name="name">barco search</field>
+            <field name="model">pirates.barco</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <field name="barco_type" />
+                    <field name="tripulacion" />
+                    <field name="canyones" string="Canyones More than" filter_domain="[('canyones', '>=', self)]" />
+                    <filter name="canyones_more_two" string="More than 2 canyones" domain="[('canyones', '>', 2)]" />
+                    <filter name="group_by_barco_type" string="Group by Barco Type" context="{'group_by': 'barco_type'}" />
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

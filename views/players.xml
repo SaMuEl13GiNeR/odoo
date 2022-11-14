@@ -1,0 +1,112 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <!-- PLAYER -->
+        <record model="ir.ui.view" id="pirates.player_tree">
+            <field name="name">player list</field>
+            <field name="model">pirates.player</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"></field>
+                    <field name="password" password="True"></field>
+                    <field name="avatar_min" widget="image"></field>
+                    <field name="name_tripulacion"></field>
+                    <field name="total_dmg"></field>
+                    <field name="pirates" widget="many2many_tags"></field>
+                    <field name="barco" widget="many2many_tags"></field>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pirates.player_form">
+            <field name="name">player form</field>
+            <field name="model">pirates.player</field>
+            <field name="arch" type="xml">
+                <form string="Course Form">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="password" password="True" />
+                                <field name="name_tripulacion" />
+                                <field name="total_dmg" editable="false"></field>
+                                <field name="avatar" widget="image" />
+
+                            </group>
+
+                            <notebook>
+                                <page string="Pirates">
+                                    <group>
+                                        <field name="pirates" mode="tree">
+                                            <tree editable="bottom">
+                                                <field name="name"></field>
+                                                <field name="pirates_type"></field>
+                                            </tree>
+                                        </field>
+                                    </group>
+
+                                </page>
+                                <page string="Barcos">
+                                    <group>
+                                        <field name="barco" mode="tree">
+                                            <tree editable="bottom">
+                                                <field name="name"></field>
+                                                <field name="barco_type"></field>
+                                                <field name="canyones"></field>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pirates.player_kanban">
+            <field name="name">player kanban</field>
+            <field name="model">pirates.player</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id" />
+                    <field name="name"></field>
+                    <field name="avatar"></field>
+                    <field name="name_tripulacion"></field>
+                    <field name="total_dmg"></field>
+                    <field name="pirates"></field>
+                    <field name="barco"></field>
+
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                    t-attf-style="background-image:url('#{kanban_image('pirates.player', 'avatar', record.id.value, placeholder)}')"></div>
+
+                                <div class="oe_kanban_details d-flex flex-column">
+                                    <a type="open">
+                                        <h4 class="o_kanban_record_title oe_partner_heading">
+                                            <field name="name" />
+                                        </h4>
+                                    </a>
+                                    <ul>
+                                        <li>
+                                            Tripulacion:
+                                            <field name="name_tripulacion" />
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

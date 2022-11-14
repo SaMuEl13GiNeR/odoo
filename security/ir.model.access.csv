@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pirates_pirates,pirates.pirates,model_pirates_pirates,base.group_user,1,1,1,1
+access_pirates_player,pirates.player,model_pirates_player,base.group_user,1,1,1,1
+access_pirates_pirates_type,pirates.pirates_type,model_pirates_pirates_type,base.group_user,1,1,1,1
+access_pirates_barco,pirates.barco,model_pirates_barco,base.group_user,1,1,1,1
+access_pirates_barco_type,pirates.barco_type,model_pirates_barco_type,base.group_user,1,1,1,1
+access_pirates_battle,pirates.battle,model_pirates_battle,base.group_user,1,1,1,1

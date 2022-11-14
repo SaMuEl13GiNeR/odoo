@@ -1,0 +1,45 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <!-- PIRATES TYPE pirates_type.xml-->
+
+
+        <record model="ir.ui.view" id="pirates.pirates_type_tree">
+            <field name="name">pirates type list</field>
+            <field name="model">pirates.pirates_type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"></field>
+                    <field name="avatar_min" widget="image"></field>
+                    <field name="dmg"></field>
+                    <field name="hp"></field>
+                    <field name="ganancias"></field>
+                    <field name="ataques"></field>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pirates.pirates_type_form">
+            <field name="name">pirates type form</field>
+            <field name="model">pirates.pirates_type</field>
+            <field name="arch" type="xml">
+                <form string="Pirates Type Form">
+                    <sheet>
+                        <group>
+                            <field name="name"></field>
+                            <field name="dmg"></field>
+                            <field name="hp"></field>
+                            <field name="ganancias"></field>
+                            <field name="ataques"></field>
+                            <field name="avatar" widget="image" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>
