@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+
+        <record model="ir.cron" forcecreate="True" id="pirates.cron_produce">
+            <field name="name">Game: Cron Produce</field>
+            <field name="model_id" ref="model_pirates_pirates" />
+            <field name="state">code</field>
+            <field name="code">model.procude_ganancias()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="activity_user_type">specific</field>
+            <field name="doall" eval="False" />
+        </record>
+
+    </data>
+</odoo>

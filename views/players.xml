@@ -13,6 +13,7 @@
                     <field name="avatar_min" widget="image"></field>
                     <field name="name_tripulacion"></field>
                     <field name="total_dmg"></field>
+                    <field name="total_ganancias"></field>
                     <field name="pirates" widget="many2many_tags"></field>
                     <field name="barco" widget="many2many_tags"></field>
                 </tree>
@@ -32,32 +33,32 @@
                                 <field name="password" password="True" />
                                 <field name="name_tripulacion" />
                                 <field name="total_dmg" editable="false"></field>
+                                <field name="total_ganancias" editable="false"></field>
+                                <field name="ganancias_actuales"></field>
+                                <field name="tamano_tripulacion"></field>
+                                <field name="progress_ganancias" widget="progressbar"></field>
                                 <field name="avatar" widget="image" />
 
                             </group>
 
                             <notebook>
-                                <page string="Pirates">
+                                <page string="Barcos tree">
                                     <group>
-                                        <field name="pirates" mode="tree">
-                                            <tree editable="bottom">
-                                                <field name="name"></field>
-                                                <field name="pirates_type"></field>
-                                            </tree>
-                                        </field>
-                                    </group>
-
-                                </page>
-                                <page string="Barcos">
-                                    <group>
-                                        <!-- <field name="barco" mode="tree">
+                                        <field name="barco" mode="tree">
                                             <tree editable="bottom">
                                                 <field name="name"></field>
                                                 <field name="barco_type"></field>
                                                 <field name="canyones"></field>
                                             </tree>
-                                        </field> -->
-                                        <field name="barco" mode="kanban">
+                                        </field>
+                                    </group>
+                                </page>
+                                <page string="Barcos kanban">
+                                    <group>
+
+                                        <!-- BOTON GENERAR BARCO AUTOMATICAMENTE -->
+
+                                        <field name="barco2" mode="kanban">
 
                                             <kanban>
                                                 <field name="id" />
@@ -88,6 +89,73 @@
                                                                     </li>
                                                                 </ul>
                                                             </div>
+
+                                                        </div>
+                                                    </t>
+                                                </templates>
+                                            </kanban>
+                                        </field>
+
+
+                                    </group>
+                                </page>
+                            </notebook>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Pirates tree">
+                                    <group>
+                                        <field name="pirates" mode="tree">
+                                            <tree editable="bottom">
+                                                <field name="name"></field>
+                                                <field name="pirates_type"></field>
+                                                <field name="ganancias_generadas"></field>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                </page>
+
+                                <page string="Pirates kanban">
+                                    <group>
+                                        <group>
+                                            <button name="ampliar_tripulacion" type="object" string="Ampliar Tripulacion" class="btn btn-primary"></button>
+                                            <field name="tamano_tripulacion" editable="false"></field>
+                                            <field name="required_money" editable="false"></field>
+                                        </group>
+
+                                        <field name="pirates2" mode="kanban">
+                                            <kanban>
+                                                <field name="id" />
+                                                <field name="name"></field>
+                                                <field name="avatar"></field>
+                                                <field name="pirates_type"></field>
+                                                <field name="ganancias_generadas"></field>
+                                                <templates>
+                                                    <t t-name="kanban-box">
+                                                        <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                            <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                                                t-attf-style="background-image:url('#{kanban_image('pirates.pirates', 'avatar', record.id.value, placeholder)}')"></div>
+                                                            <div class="oe_kanban_details d-flex flex-column">
+                                                                <a type="open">
+                                                                    <h4
+                                                                        class="o_kanban_record_title oe_partner_heading">
+                                                                        <field name="name" />
+                                                                    </h4>
+                                                                </a>
+                                                                <ul>
+                                                                    <li>
+                                                                        Tipo:
+                                                                        <field name="pirates_type" />
+                                                                    </li>
+                                                                    <li>
+                                                                        Ganancias:
+                                                                        <field name="ganancias_generadas" />
+                                                                    </li>
+                                                                    <li>
+                                                                        <button name="procude_ganancias2" type="object" string="Produce Ganancias" class="btn btn-primary">Genera Ganancias</button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
                                                             <!-- <div class="oe_kanban_details d-flex flex-column">
                                                                 <h4 class="o_kanban_record_title oe_partner_heading">Vehicles:</h4>
                                                                 <div class="vehicles_images">
@@ -108,14 +176,70 @@
                                                     </t>
                                                 </templates>
                                             </kanban>
-
                                         </field>
-
-
                                     </group>
                                 </page>
                             </notebook>
+
                         </group>
+                        <h1>Pirates Availables:</h1>
+                        <field name="pirates_type_disponibles" mode="kanban">
+                            <kanban>
+                                <field name="id" />
+                                <field name="name"></field>
+                                <field name="avatar"></field>
+                                <field name="dmg"></field>
+                                <field name="hp"></field>
+                                <field name="ganancias"></field>
+                                <field name="ataques"></field>
+
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                            <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                                t-attf-style="background-image:url('#{kanban_image('pirates.pirates_type', 'avatar', record.id.value, placeholder)}')"></div>
+
+                                            <div class="oe_kanban_details d-flex flex-column">
+                                                <a type="open">
+                                                    <h4 class="o_kanban_record_title oe_partner_heading">
+                                                        <field name="name" />
+                                                    </h4>
+                                                </a>
+                                                <ul>
+                                                    <li>
+                                                        Hp:
+                                                        <field name="hp" />
+                                                    </li>
+                                                    <li>
+                                                        Damage:
+                                                        <field name="dmg" />
+                                                    </li>
+                                                    <li>
+                                                        Ataques:
+                                                        <field name="ataques" />
+                                                    </li>
+                                                    <li>
+                                                        Ganacias:
+                                                        <field name="ganancias" />
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="oe_kanban_details d-flex flex-column">
+                                                <button name="reclute"
+                                                    type="object"
+                                                    string="Reclute"
+                                                    class="btn btn-primary"
+                                                    context="{'ctx_player':parent.id}"
+                                                >Reclute</button>
+                                            </div>
+                                        </div>
+
+
+                                    </t>
+                                </templates>
+                            </kanban>
+
+                        </field>
                     </sheet>
                 </form>
             </field>

@@ -13,6 +13,8 @@
                     <field name="avatar_min" widget="image"></field>
                     <field name="pirates_type"></field>
                     <field name="tripulacion"></field>
+                    <field name="ganancias_generadas"></field>
+
                 </tree>
             </field>
         </record>
@@ -29,6 +31,7 @@
                             <field name="pirates_type"></field>
                             <field name="tripulacion"></field>
                             <field name="avatar" widget="image" />
+                            <field name="ganancias_generadas"></field>
                         </group>
                     </sheet>
                 </form>

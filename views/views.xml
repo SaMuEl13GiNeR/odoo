@@ -71,7 +71,7 @@
 
     <!-- Top menu item -->
 
-    <menuitem name="PIRATES" id="pirates.menu_root" />
+    <menuitem name="PIRATES" id="pirates.menu_root" sequence="1" />
 
     <!-- menu categories -->
 

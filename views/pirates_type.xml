@@ -16,6 +16,7 @@
                     <field name="hp"></field>
                     <field name="ganancias"></field>
                     <field name="ataques"></field>
+                    <field name="tamano_tripulacion"></field>
                 </tree>
             </field>
         </record>
@@ -34,6 +35,7 @@
                             <field name="ganancias"></field>
                             <field name="ataques"></field>
                             <field name="avatar" widget="image" />
+                            <field name="tamano_tripulacion"></field>
                         </group>
                     </sheet>
                 </form>
