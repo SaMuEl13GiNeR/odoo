@@ -75,15 +75,15 @@ class player(models.Model):
     barco2 = fields.One2many(related="barco")
 
     total_dmg = fields.Integer(compute="_total_dmg")
-    total_ganancias = fields.Integer(compute="_total_ganancias")
-    ganancias_actuales = fields.Integer()
+    total_ganancias = fields.Integer(compute="_total_ganancias", default=0)
+    ganancias_actuales = fields.Integer(default=0)
     gastos = fields.Integer()
     # total_ganancias = fields.Integer()
     tamano_tripulacion = fields.Integer(default=0)
     pirates_type_disponibles = fields.Many2many('pirates.pirates_type', compute="_get_available_pirates")
     required_money = fields.Integer(compute="_required_money")
 
-    progress_ganancias = fields.Float(compute="_get_progress")
+    progress_ganancias = fields.Float(compute="_get_progress", default=0)
 
     @api.depends('pirates', 'barco')
     def _total_dmg(self):
@@ -132,6 +132,12 @@ class player(models.Model):
             player.progress_ganancias = player.ganancias_actuales * 100 / player.total_ganancias
 
 
+
+    @api.constrains('name')
+    def check_name_length(self):
+        for player in self:
+            if len(player.name) < 3:
+                raise ValidationError("Your name is too small: %s" % player.name)
 
 
 class pirates_type(models.Model):
