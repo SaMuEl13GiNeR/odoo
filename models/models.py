@@ -78,7 +78,6 @@ class player(models.Model):
     total_ganancias = fields.Integer(compute="_total_ganancias", default=0)
     ganancias_actuales = fields.Integer(default=0)
     gastos = fields.Integer()
-    # total_ganancias = fields.Integer()
     tamano_tripulacion = fields.Integer(default=0)
     pirates_type_disponibles = fields.Many2many('pirates.pirates_type', compute="_get_available_pirates")
     required_money = fields.Integer(compute="_required_money")
