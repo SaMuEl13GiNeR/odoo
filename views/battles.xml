@@ -20,31 +20,42 @@
             <field name="name">battle form</field>
             <field name="model">pirates.battle</field>
             <field name="arch" type="xml">
-                <form string="Battle Form">
+                <form>
                     <sheet>
                         <group>
                             <group>
                                 <field name="name" />
-                            </group>
-                            <group>
                                 <field name="date_start" />
                                 <field name="date_end" />
+                                <field name="progress" widget="progressbar" />
                             </group>
-                        </group>
-                        <group>
                             <group>
                                 <field name="player1" />
-                                <field name="pirates1" />
-                            </group>
-                            <group>
                                 <field name="player2" />
-                                <field name="pirates2" />
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Pirates">
+                                <group>
+                                    <field name="pirates1_available">
+                                        <tree>
+                                            <!-- <button name="add_to_battle"
+                                                type="object"
+                                            string="Add"
+                                                class="btn
+                                            btn-primary"
+                                                context="{'ctx_battle':parent.id}"
+                                            ></button> -->
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
 
         <record model="ir.ui.view" id="pirates.battle_calendar">
             <field name="name">battle list</field>
@@ -61,6 +72,62 @@
                     <field name="player2" />
                 </calendar>
             </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pirates.battle_wizard_form">
+            <field name="name">pirates form</field>
+            <field name="model">pirates.battle_wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_previous" type="object"
+                            string="Previous"
+                            states="2,3" />
+                        <button name="action_next" type="object"
+                            string="Next" states="1,2"
+                            class="oe_highlight" />
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+
+                        <group states="1">
+                            <field name="name" />
+                            <field name="date_start" />
+                            <field name="player1" />
+                        </group>
+
+                        <group states="2">
+                            <field name="player2" />
+                            <field name="date_end" />
+                        </group>
+
+                        <group states="1">
+                            <field name="pirates1_available">
+                                <!-- <tree>
+                    
+                                    <button
+                                name="add_to_battle"
+                                        type="object"
+                                string="Add"
+                                        class="btn
+                                btn-primary"
+                                        context="{'ctx_battle':parent.id}"
+                                ></button>
+                                </tree> -->
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="pirates.battle_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create battle</field>
+            <field name="res_model">pirates.battle_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
 
 

@@ -19,7 +19,6 @@ def name_generator():
     return name
 
 
-
 class pirates(models.Model):
     _name = 'pirates.pirates'
     _description = 'pirates.pirates'
@@ -28,7 +27,7 @@ class pirates(models.Model):
     avatar  = fields.Image(related="pirates_type.avatar")
     avatar_min = fields.Image(related="avatar", max_width=50, max_height=50)
     pirates_type = fields.Many2one("pirates.pirates_type", string='Tipo', ondelete='restrict')
-    tripulacion = fields.Many2one("pirates.player", string='Tripulacion', ondelete='restrict')
+    tripulacion = fields.Many2one("res.partner", string='Tripulacion', ondelete='restrict')
     ganancias_generadas = fields.Integer(default=0)
 
 
@@ -52,7 +51,7 @@ class barco(models.Model):
 
     name = fields.Char()
     barco_type = fields.Many2one("pirates.barco_type", string='Tipo', ondelete='restrict')
-    tripulacion = fields.Many2one("pirates.player", string='Tripulacion', ondelete='restrict')
+    tripulacion = fields.Many2one("res.partner", string='Tripulacion', ondelete='restrict')
     canyones = fields.Integer()
     avatar  = fields.Image(related="barco_type.avatar")
     avatar_min = fields.Image(related="barco_type.avatar", max_width=50, max_height=50)
@@ -60,10 +59,10 @@ class barco(models.Model):
 
 
 class player(models.Model):
-    _name = 'pirates.player'
-    _description = 'pirates.player'
+    _name = 'res.partner'
+    _description = 'res.partner'
+    _inherit = 'res.partner'
 
-    name = fields.Char()
     password = fields.Char()
     avatar = fields.Image(max_width=200, max_height=200)
     avatar_min = fields.Image(related="avatar", max_width=50, max_height=50)
@@ -75,14 +74,16 @@ class player(models.Model):
     barco2 = fields.One2many(related="barco")
 
     total_dmg = fields.Integer(compute="_total_dmg")
-    total_ganancias = fields.Integer(compute="_total_ganancias", default=0)
-    ganancias_actuales = fields.Integer(default=0)
+    total_ganancias = fields.Integer(compute="_total_ganancias", default=500)
+    ganancias_actuales = fields.Integer(default=500)
     gastos = fields.Integer()
-    tamano_tripulacion = fields.Integer(default=0)
+    tamano_tripulacion = fields.Integer(default=1)
     pirates_type_disponibles = fields.Many2many('pirates.pirates_type', compute="_get_available_pirates")
     required_money = fields.Integer(compute="_required_money")
 
-    progress_ganancias = fields.Float(compute="_get_progress", default=0)
+    progress_ganancias = fields.Float(compute="_get_progress", default=100)
+
+    is_player = fields.Boolean(default=False)
 
     @api.depends('pirates', 'barco')
     def _total_dmg(self):
@@ -128,6 +129,12 @@ class player(models.Model):
     @api.depends('total_ganancias', 'ganancias_actuales')
     def _get_progress(self):
         for player in self: 
+            if (player.total_ganancias <= 0 ):
+                player.total_ganancias = 1
+
+            if (player.ganancias_actuales <= 0 ):
+                player.ganancias_actuales = 1
+
             player.progress_ganancias = player.ganancias_actuales * 100 / player.total_ganancias
 
 
@@ -137,6 +144,19 @@ class player(models.Model):
         for player in self:
             if len(player.name) < 3:
                 raise ValidationError("Your name is too small: %s" % player.name)
+
+
+    def launch_player_wizard(self):
+        return {
+            'name': 'Create Player',
+            'type': 'ir.actions.act_window',
+            'res_model': 'pirates.player_wizard',
+            'view_mode': 'form',
+            'target': 'new'
+        }
+
+    def launch_battle_wizard(self):
+        return self.env.ref('pirates.battle_wizard_action').read()[0]
 
 
 class pirates_type(models.Model):
@@ -158,7 +178,7 @@ class pirates_type(models.Model):
 
     def reclute(self):  # ORM
         for s in self:
-            player = self.env['pirates.player'].browse(self.env.context['ctx_player'])
+            player = self.env['res.partner'].browse(self.env.context['ctx_player'])
             print('parent.id de pirates_type', player)
             player.gastos = player.gastos + s.ganancias
             player.pirates.create({
@@ -189,15 +209,20 @@ class battle(models.Model):
     _description = 'Battles'
 
     name = fields.Char()
+    progress = fields.Float()
     
     date_start = fields.Datetime()
     date_end = fields.Datetime()
 
-    player1 = fields.Many2one('pirates.player')
-    player2 = fields.Many2one('pirates.player')
+    player1 = fields.Many2one('res.partner')
+    player2 = fields.Many2one('res.partner')
 
     pirates1 = fields.Many2one('pirates.pirates')
     pirates2 = fields.Many2one('pirates.pirates')
+
+    state = fields.Selection([('1', 'Player1'), ('2', 'Player2'), ('3', 'Resume')], default='1')
+    pirates1_available = fields.Many2many('pirates.player_pirates_rel', compute='_get_pirates_available')
+    total_power = fields.Float()
 
 
     @api.onchange('player1')
@@ -219,13 +244,99 @@ class battle(models.Model):
             }
         }
 
+    @api.depends('player1')
+    def _get_pirates_available(self):
+        for b in self:
+            b.pirates1_available = b.player1.pirates.ids
 
 
 
-                
+
+class player_wizard(models.TransientModel):
+    _name = 'pirates.player_wizard'
+    _description = 'Wizard per crear players'
+
+    def _default_client(self):
+        return self.env['res.partner'].browse(self._context.get('active_id')) 
+        
+    name = fields.Many2one('res.partner',default=_default_client)
+    password = fields.Char()
+    avatar = fields.Image(max_width=200, max_height=200)
+
+    def create_player(self):
+        self.ensure_one()
+        self.name.write({'password': self.password,
+                        'avatar': self.avatar,
+                        'is_player': True
+                        })
+                    
 
 
             
+class battle_wizard(models.TransientModel):
+    _name = 'pirates.battle_wizard'
+    _description = 'Battle wizard'
+
+    name = fields.Char()
+    date_start = fields.Datetime(readonly=True, default=fields.Datetime.now)
+    date_end = fields.Datetime()
+    state = fields.Selection([('1', 'Player1'), ('2', 'Player2'), ('3', 'Resume')], default='1')
+    player1 = fields.Many2one('res.partner')
+    player2 = fields.Many2one('res.partner')
+    pirates1_available = fields.Many2many('pirates.player_pirates_rel', compute='_get_pirates_available')
+    total_power = fields.Float()
+
+    @api.onchange('player1')
+    def onchange_player1(self):
+        self.name = self.player1.name
+        return {
+            'domain': {
+                'colony1': [('id', 'in', self.player1.colonies.ids)],
+                'player2': [('id', '!=', self.player1.id)],
+            }
+        }
+
+    @api.onchange('player2')
+    def onchange_player2(self):
+        return {
+            'domain': {
+                'colony2': [('id', 'in', self.player2.colonies.ids)],
+                'player1': [('id', '!=', self.player2.id)],
+            }
+        }
+
+    @api.depends('player1')
+    def _get_pirates_available(self):
+        for b in self:
+            b.pirates1_available = b.player1.pirates.ids
+
+    def  action_previous(self):
+        if self.state == '2':
+            self.state = '1'
+        elif self.state == '3':
+            self.state = '2'
+        return {
+            'name': 'Create Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'pirates.battle_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': self.id
+        }
+
+    def action_next(self):
+        if self.state == '1':
+            self.state = '2'
+        elif self.state == '2':
+            self.state = '3'
+        return {
+            'name': 'Create Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'pirates.battle_wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'res_id': self.id
+        }
 
            
 

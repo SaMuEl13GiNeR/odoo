@@ -2,14 +2,46 @@
     <data>
         <!-- explicit list view definition -->
 
+        <record model="ir.ui.view" id="pirates.player_wizard_form">
+            <field name="name">pirates player wizard</field>
+            <field name="model">pirates.player_wizard</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <group>
+                        <field name="avatar" widget="image" />
+                        <field name="name" />
+                        <field name="password" password="True" />
+                    </group>
+
+                    <footer>
+                        <button name="create_player" type="object"
+                            string="Create" class="oe_highlight" />
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="pirates.player_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Player</field>
+            <field name="res_model">pirates.player_wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_partner" />
+        </record>
+
+
         <!-- PLAYER -->
         <record model="ir.ui.view" id="pirates.player_tree">
             <field name="name">player list</field>
-            <field name="model">pirates.player</field>
+            <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <tree decoration-danger="ganancias_actuales&lt;0">
                     <field name="name"></field>
                     <field name="password" password="True"></field>
+                    <field name="is_player" />
                     <field name="avatar_min" widget="image"></field>
                     <field name="name_tripulacion"></field>
                     <field name="total_dmg"></field>
@@ -24,7 +56,7 @@
 
         <record model="ir.ui.view" id="pirates.player_form">
             <field name="name">player form</field>
-            <field name="model">pirates.player</field>
+            <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <form string="Course Form">
                     <sheet>
@@ -32,6 +64,7 @@
                             <group>
                                 <field name="name" />
                                 <field name="password" password="True" />
+                                <field name="is_player" />
                                 <field name="name_tripulacion" />
                                 <field name="total_dmg" editable="false"></field>
                                 <field name="total_ganancias" editable="false"></field>
@@ -69,10 +102,13 @@
                                                 <field name="canyones"></field>
                                                 <templates>
                                                     <t t-name="kanban-box">
-                                                        <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
-                                                            <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                                        <div
+                                                            t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                            <div
+                                                                class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
                                                                 t-attf-style="background-image:url('#{kanban_image('pirates.barco', 'avatar', record.id.value, placeholder)}')"></div>
-                                                            <div class="oe_kanban_details d-flex flex-column">
+                                                            <div
+                                                                class="oe_kanban_details d-flex flex-column">
                                                                 <a type="open">
                                                                     <h4
                                                                         class="o_kanban_record_title oe_partner_heading">
@@ -80,13 +116,11 @@
                                                                     </h4>
                                                                 </a>
                                                                 <ul>
-                                                                    <li>
-                                                                        Tipo:
-                                                                        <field name="barco_type" />
+                                                                    <li> Tipo: <field
+                                                                            name="barco_type" />
                                                                     </li>
-                                                                    <li>
-                                                                        Cañones:
-                                                                        <field name="canyones" />
+                                                                    <li> Cañones: <field
+                                                                            name="canyones" />
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -119,7 +153,8 @@
                                 <page string="Pirates kanban">
                                     <group>
                                         <group>
-                                            <button name="ampliar_tripulacion" type="object" string="Ampliar Tripulacion" class="btn btn-primary"></button>
+                                            <button name="ampliar_tripulacion" type="object"
+                                                string="Ampliar Tripulacion" class="btn btn-primary"></button>
                                             <field name="tamano_tripulacion" editable="false"></field>
                                             <field name="required_money" editable="false"></field>
                                         </group>
@@ -133,10 +168,13 @@
                                                 <field name="ganancias_generadas"></field>
                                                 <templates>
                                                     <t t-name="kanban-box">
-                                                        <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
-                                                            <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
+                                                        <div
+                                                            t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                                            <div
+                                                                class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block negocity_img_kanban"
                                                                 t-attf-style="background-image:url('#{kanban_image('pirates.pirates', 'avatar', record.id.value, placeholder)}')"></div>
-                                                            <div class="oe_kanban_details d-flex flex-column">
+                                                            <div
+                                                                class="oe_kanban_details d-flex flex-column">
                                                                 <a type="open">
                                                                     <h4
                                                                         class="o_kanban_record_title oe_partner_heading">
@@ -144,32 +182,46 @@
                                                                     </h4>
                                                                 </a>
                                                                 <ul>
-                                                                    <li>
-                                                                        Tipo:
-                                                                        <field name="pirates_type" />
+                                                                    <li> Tipo: <field
+                                                                            name="pirates_type" />
+                                                                    </li>
+                                                                    <li> Ganancias: <field
+                                                                            name="ganancias_generadas" />
                                                                     </li>
                                                                     <li>
-                                                                        Ganancias:
-                                                                        <field name="ganancias_generadas" />
-                                                                    </li>
-                                                                    <li>
-                                                                        <button name="procude_ganancias2" type="object" string="Produce Ganancias" class="btn btn-primary">Genera Ganancias</button>
+                                                                        <button
+                                                                            name="procude_ganancias2"
+                                                                            type="object"
+                                                                            string="Produce Ganancias"
+                                                                            class="btn btn-primary">Genera
+                                                                            Ganancias</button>
                                                                     </li>
                                                                 </ul>
                                                             </div>
-                                                            <!-- <div class="oe_kanban_details d-flex flex-column">
-                                                                <h4 class="o_kanban_record_title oe_partner_heading">Vehicles:</h4>
-                                                                <div class="vehicles_images">
-                                                                    <span t-foreach="record.vehicles.raw_value" t-as="i">
+                                                            <!-- <div class="oe_kanban_details
+                                                            d-flex flex-column">
+                                                                <h4
+                                                            class="o_kanban_record_title
+                                                            oe_partner_heading">Vehicles:</h4>
+                                                                <div
+                                                            class="vehicles_images">
+                                                                    <span
+                                                            t-foreach="record.vehicles.raw_value"
+                                                            t-as="i">
 
-                                                                        <img t-attf-class="mini_vehicle"
-                                                                            t-att-src="kanban_image('negocity.vehicle', 'img_computed',i)"
-                                                                            t-att-alt="i" />
+                                                                        <img
+                                                            t-attf-class="mini_vehicle"
+                                                            t-att-src="kanban_image('negocity.vehicle',
+                                                            'img_computed',i)"
+                                                                            t-att-alt="i"
+                                                            />
                                                                     </span>
-                                                                </div>
+                                                            </div>
 
-                                                                <button name="assign_random_car" type="object"
-                                                                    string="Random Car" class="btn btn-primary">Random
+                                                                <button
+                                                            name="assign_random_car" type="object"
+                                                            string="Random Car" class="btn
+                                                            btn-primary">Random
                                                                     Car</button>
                                                             </div> -->
 
@@ -180,6 +232,15 @@
                                         </field>
                                     </group>
                                 </page>
+
+                                <page string="Battles">
+                                    <group>
+                                        <button name="launch_battle_wizard" type="object"
+                                            string="Create new Battle" class="oe_highlight" />
+                                    </group>
+                                </page>
+
+
                             </notebook>
 
                         </group>
@@ -196,32 +257,27 @@
 
                                 <templates>
                                     <t t-name="kanban-box">
-                                        <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
-                                            <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                        <div
+                                            t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
+                                            <div
+                                                class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
                                                 t-attf-style="background-image:url('#{kanban_image('pirates.pirates_type', 'avatar', record.id.value, placeholder)}')"></div>
 
                                             <div class="oe_kanban_details d-flex flex-column">
                                                 <a type="open">
-                                                    <h4 class="o_kanban_record_title oe_partner_heading">
+                                                    <h4
+                                                        class="o_kanban_record_title oe_partner_heading">
                                                         <field name="name" />
                                                     </h4>
                                                 </a>
                                                 <ul>
-                                                    <li>
-                                                        Hp:
-                                                        <field name="hp" />
+                                                    <li> Hp: <field name="hp" />
                                                     </li>
-                                                    <li>
-                                                        Damage:
-                                                        <field name="dmg" />
+                                                    <li> Damage: <field name="dmg" />
                                                     </li>
-                                                    <li>
-                                                        Ataques:
-                                                        <field name="ataques" />
+                                                    <li> Ataques: <field name="ataques" />
                                                     </li>
-                                                    <li>
-                                                        Ganacias:
-                                                        <field name="ganancias" />
+                                                    <li> Ganacias: <field name="ganancias" />
                                                     </li>
                                                 </ul>
                                             </div>
@@ -247,9 +303,40 @@
         </record>
 
 
+        <record model="ir.ui.view" id="pirates.player_form_herencia">
+            <field name="name">player form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Pirates">
+
+                        <group>
+                            <field name="name" />
+                            <field name="password" password="True" />
+                            <field name="is_player" />
+                            <button name="%(pirates.player_wizard_action)d" type="action"
+                                string="Create Player" class="oe_highlight" />
+                            <button name="launch_player_wizard" type="object"
+                                string="Create Player python" class="oe_highlight" />
+                            <field name="name_tripulacion" />
+                            <field name="total_dmg" editable="false"></field>
+                            <field name="total_ganancias" editable="false"></field>
+                            <field name="ganancias_actuales"></field>
+                            <field name="tamano_tripulacion"></field>
+                            <field name="progress_ganancias" widget="progressbar"></field>
+                            <field name="avatar" widget="image" />
+
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+
         <record model="ir.ui.view" id="pirates.player_kanban">
             <field name="name">player kanban</field>
-            <field name="model">pirates.player</field>
+            <field name="model">res.partner</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="id" />
@@ -264,8 +351,9 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card o_kanban_record_has_image_fill ">
 
-                                <div class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
-                                    t-attf-style="background-image:url('#{kanban_image('pirates.player', 'avatar', record.id.value, placeholder)}')"></div>
+                                <div
+                                    class="o_kanban_image_fill_left o_kanban_image_full d-none d-md-block"
+                                    t-attf-style="background-image:url('#{kanban_image('res.partner', 'avatar', record.id.value, placeholder)}')"></div>
 
                                 <div class="oe_kanban_details d-flex flex-column">
                                     <a type="open">
@@ -274,9 +362,7 @@
                                         </h4>
                                     </a>
                                     <ul>
-                                        <li>
-                                            Tripulacion:
-                                            <field name="name_tripulacion" />
+                                        <li> Tripulacion: <field name="name_tripulacion" />
                                         </li>
 
                                     </ul>
@@ -285,6 +371,20 @@
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pirates.player_search">
+            <field name="name">player search</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="17" />
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" />
+                    <filter name="player_partner" string="Is Player"
+                        domain="[('is_player','=',True)]" />
+                </search>
             </field>
         </record>
 
