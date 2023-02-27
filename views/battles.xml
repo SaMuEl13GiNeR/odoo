@@ -118,6 +118,11 @@
                             </field>
                         </group>
                     </sheet>
+                    <footer >
+                        <button states="3" name="create_battle" type="object"
+                            string="Create" class="oe_highlight"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

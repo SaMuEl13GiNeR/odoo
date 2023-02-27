@@ -283,7 +283,7 @@ class battle_wizard(models.TransientModel):
     state = fields.Selection([('1', 'Player1'), ('2', 'Player2'), ('3', 'Resume')], default='1')
     player1 = fields.Many2one('res.partner')
     player2 = fields.Many2one('res.partner')
-    pirates1_available = fields.Many2many('pirates.player_pirates_rel', compute='_get_pirates_available')
+    pirates1_available = fields.Many2many('pirates.pirates', compute='_get_pirates_available')
     total_power = fields.Float()
 
     @api.onchange('player1')
@@ -291,7 +291,7 @@ class battle_wizard(models.TransientModel):
         self.name = self.player1.name
         return {
             'domain': {
-                'colony1': [('id', 'in', self.player1.colonies.ids)],
+                'pirates1': [('id', 'in', self.player1.pirates.ids)],
                 'player2': [('id', '!=', self.player1.id)],
             }
         }
@@ -300,7 +300,7 @@ class battle_wizard(models.TransientModel):
     def onchange_player2(self):
         return {
             'domain': {
-                'colony2': [('id', 'in', self.player2.colonies.ids)],
+                'pirates2': [('id', 'in', self.player2.pirates.ids)],
                 'player1': [('id', '!=', self.player2.id)],
             }
         }
@@ -336,6 +336,26 @@ class battle_wizard(models.TransientModel):
             'view_mode': 'form',
             'target': 'new',
             'res_id': self.id
+        }
+
+    def create_battle(self):
+        new_battle = self.env['pirates.battle'].create({
+            'name': self.name,
+            'player1': self.player1.id,
+            'player2': self.player2.id,
+            'state': '1',
+            'date_start': self.date_start,
+            'date_end': self.date_end,
+
+        })
+    
+        return  {
+            'name': 'Created Battle',
+            'type': 'ir.actions.act_window',
+            'res_model': 'pirates.battle',
+            'view_mode': 'form',
+            'target': 'current',
+            'res_id': new_battle.id,
         }
 
            
